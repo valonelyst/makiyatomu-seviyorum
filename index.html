@@ -153,6 +153,16 @@
             margin-bottom: 25px;
         }
 
+        .score-board {
+            background: #f9f4f4;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
         .success-box {
             background: #f4faf4;
             border: 2px dashed #a3d9a5;
@@ -168,10 +178,10 @@
         <!-- TEST EKRANI -->
         <div id="quiz-screen">
             <h1>Meryem'i Ne Kadar Tanıyorsun? 🤍</h1>
-            <div class="subtitle">Bu testi geçemezsen her şey iptal, taşı tarağı toplayıp gidiyor!</div>
+            <div class="subtitle">Bakalım beni gerçekten ne kadar tanıyorsun sevgilim?</div>
             
             <div class="warning-box">
-                ⚠️ <strong>Kural:</strong> 8 sorudan en az **5 tanesini** doğru bilmek zorundasın. Yoksa totona güvenip geldiğin yola geri dönersin. Başlıyoruz!
+                ⚠️ <strong>Kural:</strong> 8 sorudan en az **5 tanesini** doğru bilmen gerekiyor. Görelim bakalım performansını! Başlıyoruz!
             </div>
 
             <form id="love-quiz">
@@ -258,18 +268,20 @@
         <!-- BAŞARILI SONUÇ EKRANI -->
         <div id="success-screen" class="result-container hidden">
             <h2>🎉 Helal olsun be!</h2>
-            <p>Testi başarıyla geçtin! Taşı tarağı toplayıp gitmene gerek kalmadı, kalbimi kazandın. 🤍</p>
+            <div class="score-board" id="success-score-text"></div>
+            <p>Testi başarıyla geçtin, kalbimi yine kazandın! 🤍</p>
             
             <div class="success-box">
-                <p style="margin-bottom: 15px; font-weight: 500;">Sınavı başarıyla tamamladın! Şimdi ekran görüntüsünü alıp veya skoru belirterek sonucunu Meryem'e bildirme vakti:</p>
-                <a href="https://wa.me/?text=Aşkım%20testi%20başarıyla%20geçtim,%20pılımı%20pırtımı%20toplamama%20gerek%20kalmadı!%20😎🤍" target="_blank" class="btn">📲 Aşkına Sınav Sonucunu Bildir!</a>
+                <p style="margin-bottom: 15px; font-weight: 500;">Sonucunu hemen Meryem'e bildir:</p>
+                <a id="whatsapp-success-btn" href="#" target="_blank" class="btn">📲 Aşkına Sınav Sonucunu Bildir!</a>
             </div>
         </div>
 
         <!-- BAŞARISIZ (KALDI) EKRANI -->
         <div id="fail-screen" class="result-container hidden">
-            <h2>🚨 SINAVDAN KALDIN!</h2>
-            <p>Maalesef 5 doğru barajını geçemedin. Kurallar kuraldır, şimdi pılını pırtını toplayıp gitme vakti! (Ya da sayfayı yenileyip tekrar deneyebilirsin kurnaz 🙂)</p>
+            <h2>Hadi ya, az kaldı! 🥺</h2>
+            <div class="score-board" id="fail-score-text"></div>
+            <p>Maalesef 5 doğru barajını tam tutturamadın. Ama pes etmek yok, sevgilini biraz daha tanımak için tekrar deneyebilirsin! 🤍</p>
             <button class="btn" onclick="location.reload()">Yeniden Dene</button>
         </div>
     </div>
@@ -310,12 +322,22 @@
             const q8 = document.querySelector('input[name="q8"]:checked');
             if (q8 && q8.value === 'a') score++;
 
-            // Sonuç kontrolü (En az 5 doğru)
+            let wrong = 8 - score;
+
+            // Ekran geçişi
             document.getElementById('quiz-screen').classList.add('hidden');
 
             if (score >= 5) {
+                document.getElementById('success-score-text.innerHTML') // güvenli atama
+                document.getElementById('success-score-text').innerText = `📊 Sonucun: ${score} Doğru, ${wrong} Yanlış`;
+                
+                // WhatsApp mesajını ayarla
+                const msg = encodeURIComponent(`Aşkım testi başarıyla geçtim, Bu köyün alfası sensin! 🦊🤍 (${score} Doğru, ${wrong} Yanlış ile geçtim 😎)`);
+                document.getElementById('whatsapp-success-btn').href = `https://wa.me/?text=${msg}`;
+                
                 document.getElementById('success-screen').classList.remove('hidden');
             } else {
+                document.getElementById('fail-score-text').innerText = `📊 Sonucun: ${score} Doğru, ${wrong} Yanlış`;
                 document.getElementById('fail-screen').classList.remove('hidden');
             }
         }
